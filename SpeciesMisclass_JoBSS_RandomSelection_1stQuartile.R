@@ -76,9 +76,9 @@ random_gmb <- process %>%
   select(detection, image_name, frame_number, bound_left, bound_bottom, bound_right, bound_top, score, length, detection_type, type_score)
 
 # Export random selections of seals -----------------------------------------------------
-write.csv(random_clc, "J:\\SpeciesMisclassification\\JoBSS\\Quartile1\\JoBSS_Quartile1Review_SpeciesID_CLC.csv", row.names = FALSE, quote = FALSE, col.names = FALSE)
-write.csv(random_smw, "J:\\SpeciesMisclassification\\JoBSS\\Quartile1\\JoBSS_Quartile1Review_SpeciesID_SMW.csv", row.names = FALSE, quote = FALSE, col.names = FALSE)
-write.csv(random_gmb, "J:\\SpeciesMisclassification\\JoBSS\\Quartile1\\JoBSS_Quartile1Review_SpeciesID_GMB.csv", row.names = FALSE, quote = FALSE, col.names = FALSE)
+write.table(random_clc, "J:\\SpeciesMisclassification\\JoBSS\\Quartile1\\JoBSS_Quartile1Review_SpeciesID_CLC.csv", row.names = FALSE, quote = FALSE, col.names = FALSE, sep = ",")
+write.table(random_smw, "J:\\SpeciesMisclassification\\JoBSS\\Quartile1\\JoBSS_Quartile1Review_SpeciesID_SMW.csv", row.names = FALSE, quote = FALSE, col.names = FALSE, sep = ",")
+write.table(random_gmb, "J:\\SpeciesMisclassification\\JoBSS\\Quartile1\\JoBSS_Quartile1Review_SpeciesID_GMB.csv", row.names = FALSE, quote = FALSE, col.names = FALSE, sep = ",")
 
 write.table(unique(random_clc$image_name), "J:\\SpeciesMisclassification\\JoBSS\\Quartile1\\Images\\_JoBSS_Quartile1Review_SpeciesID_CLC_images.txt", row.names = FALSE, quote = FALSE, col.names = FALSE)
 write.table(unique(random_smw$image_name), "J:\\SpeciesMisclassification\\JoBSS\\Quartile1\\Images\\_JoBSS_Quartile1Review_SpeciesID_SMW_images.txt", row.names = FALSE, quote = FALSE, col.names = FALSE)

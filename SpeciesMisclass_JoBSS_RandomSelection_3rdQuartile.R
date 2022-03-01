@@ -25,9 +25,10 @@ con <- RPostgreSQL::dbConnect(PostgreSQL(),
                               rstudioapi::askForPassword(paste("Enter your DB password for user account: ", Sys.getenv("pep_admin"), sep = "")))
 
 process <- RPostgreSQL::dbGetQuery(con, "SELECT detection, image_name, frame_number, bound_left, bound_bottom, bound_right, bound_top,
-                                   score, length, detection_type, type_score, detection_id, p.processing_completed_by FROM surv_jobss.tbl_detections_processed_rgb r
+                                   score, length, detection_type, type_score, detection_id, p.processing_completed_by 
+                                   FROM surv_jobss.tbl_detections_processed_rgb r
                                    LEFT JOIN annotations.tbl_detector_meta m
-                                   ON m.rgb_processed_csv = r.detection_file
+                                   ON m.rgab_processed_csv = r.detection_file
                                    LEFT JOIN annotations.tbl_detector_processing p
                                    ON m.id = p.detector_meta_id
                                    WHERE detection_type LIKE \'%seal%\'
@@ -76,9 +77,9 @@ random_gmb <- process %>%
   select(detection, image_name, frame_number, bound_left, bound_bottom, bound_right, bound_top, score, length, detection_type, type_score)
 
 # Export random selections of seals -----------------------------------------------------
-write.csv(random_clc, "J:\\SpeciesMisclassification\\JoBSS\\Quartile3\\JoBSS_Quartile3Review_SpeciesID_CLC.csv", row.names = FALSE, quote = FALSE, col.names = FALSE)
-write.csv(random_smw, "J:\\SpeciesMisclassification\\JoBSS\\Quartile3\\JoBSS_Quartile3Review_SpeciesID_SMW.csv", row.names = FALSE, quote = FALSE, col.names = FALSE)
-write.csv(random_gmb, "J:\\SpeciesMisclassification\\JoBSS\\Quartile3\\JoBSS_Quartile3Review_SpeciesID_GMB.csv", row.names = FALSE, quote = FALSE, col.names = FALSE)
+write.table(random_clc, "J:\\SpeciesMisclassification\\JoBSS\\Quartile3\\JoBSS_Quartile3Review_SpeciesID_CLC.csv", row.names = FALSE, quote = FALSE, col.names = FALSE, sep = ",")
+write.table(random_smw, "J:\\SpeciesMisclassification\\JoBSS\\Quartile3\\JoBSS_Quartile3Review_SpeciesID_SMW.csv", row.names = FALSE, quote = FALSE, col.names = FALSE, sep = ",")
+write.table(random_gmb, "J:\\SpeciesMisclassification\\JoBSS\\Quartile3\\JoBSS_Quartile3Review_SpeciesID_GMB.csv", row.names = FALSE, quote = FALSE, col.names = FALSE, sep = ",")
 
 write.table(unique(random_clc$image_name), "J:\\SpeciesMisclassification\\JoBSS\\Quartile3\\Images\\_JoBSS_Quartile3Review_SpeciesID_CLC_images.txt", row.names = FALSE, quote = FALSE, col.names = FALSE)
 write.table(unique(random_smw$image_name), "J:\\SpeciesMisclassification\\JoBSS\\Quartile3\\Images\\_JoBSS_Quartile3Review_SpeciesID_SMW_images.txt", row.names = FALSE, quote = FALSE, col.names = FALSE)
