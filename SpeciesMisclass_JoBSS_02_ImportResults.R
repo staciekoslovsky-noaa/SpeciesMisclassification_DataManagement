@@ -4,13 +4,20 @@
 library(tidyverse)
 library(RPostgreSQL)
 
-# Set variables for processing
+##### JoBSS Quartile 1 Variables
 project_schema <- "surv_jobss"
 wd <- "J:\\SpeciesMisclassification\\JoBSS\\Quartile1"
 selections <- "JoBSS_Quartile1Review_RandomSelection.csv"
 reviews <- c("JoBSS_Quartile1Review_SpeciesID_CLC.csv", "JoBSS_Quartile1Review_SpeciesID_GMB.csv", "JoBSS_Quartile1Review_SpeciesID_SMW.csv")
 reviewer <- c("CLC", "GMB", "SMW")
 review_description <- "jobss_quartile1"
+
+##### JoBSS Quartile 3 Variables
+# wd <- "J:\\SpeciesMisclassification\\JoBSS\\Quartile2"
+# selections <- "JoBSS_Quartile3Review_RandomSelection.csv"
+# reviews <- c("JoBSS_Quartile3Review_SpeciesID_CLC.csv", "JoBSS_Quartile3Review_SpeciesID_GMB.csv", "JoBSS_Quartile3Review_SpeciesID_SMW.csv")
+# reviewer <- c("CLC", "GMB", "SMW")
+# review_description <- "jobss_quartile3"
 
 # Set up working environment
 "%notin%" <- Negate("%in%")
