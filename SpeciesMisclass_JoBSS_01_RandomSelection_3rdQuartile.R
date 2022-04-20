@@ -24,7 +24,7 @@ con <- RPostgreSQL::dbConnect(PostgreSQL(),
                               user = Sys.getenv("pep_admin"), 
                               rstudioapi::askForPassword(paste("Enter your DB password for user account: ", Sys.getenv("pep_admin"), sep = "")))
 
-process <- RPostgreSQL::dbGetQuery(con, "SELECT detection, image_name, frame_number, bound_left, bound_bottom, bound_right, bound_top,
+process <- RPostgreSQL::dbGetQuery(con, "SELECT detection, image_name, frame_number, bound_left, bound_top, bound_right, bound_bottom,
                                    score, length, detection_type, type_score, detection_id, p.processing_completed_by 
                                    FROM surv_jobss.tbl_detections_processed_rgb r
                                    LEFT JOIN annotations.tbl_detector_meta m
@@ -54,7 +54,7 @@ random_clc <- process %>%
   group_by(image_name) %>%
   mutate(frame_number = cur_group_id()-1) %>%
   ungroup() %>%
-  select(detection, image_name, frame_number, bound_left, bound_bottom, bound_right, bound_top, score, length, detection_type, type_score)
+  select(detection, image_name, frame_number, bound_left, bound_top, bound_right, bound_bottom, score, length, detection_type, type_score)
 
 random_smw <- process %>%
   subset(processing_completed_by != 'SMW') %>%
@@ -64,7 +64,7 @@ random_smw <- process %>%
   group_by(image_name) %>%
   mutate(frame_number = cur_group_id()-1) %>%
   ungroup() %>%
-  select(detection, image_name, frame_number, bound_left, bound_bottom, bound_right, bound_top, score, length, detection_type, type_score)
+  select(detection, image_name, frame_number, bound_left, bound_top, bound_right, bound_bottom, score, length, detection_type, type_score)
 
 random_gmb <- process %>%
   subset(processing_completed_by != 'GMB') %>%
@@ -74,7 +74,7 @@ random_gmb <- process %>%
   group_by(image_name) %>%
   mutate(frame_number = cur_group_id()-1) %>%
   ungroup() %>%
-  select(detection, image_name, frame_number, bound_left, bound_bottom, bound_right, bound_top, score, length, detection_type, type_score)
+  select(detection, image_name, frame_number, bound_left, bound_top, bound_right, bound_bottom, score, length, detection_type, type_score)
 
 # Export random selections of seals -----------------------------------------------------
 write.table(random_clc, "J:\\SpeciesMisclassification\\JoBSS\\Quartile3\\JoBSS_Quartile3Review_SpeciesID_CLC.csv", row.names = FALSE, quote = FALSE, col.names = FALSE, sep = ",")
