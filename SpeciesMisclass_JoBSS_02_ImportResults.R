@@ -67,7 +67,7 @@ for (i in 1:length(reviews)) {
   next_id <- RPostgreSQL::dbGetQuery(con, "SELECT max(id) FROM species_misclass.tbl_detections_reviewed")
   next_id$max <- ifelse(is.na(next_id$max), 0, next_id$max)
   
-  reviewed <- read.csv(reviews[i], skip = 2, header = FALSE, stringsAsFactors = FALSE, col.names = c("detection", "image_name", "frame_number", "bound_left", "bound_bottom", "bound_right", "bound_top", "score", "length", "detection_type", "type_score", 
+  reviewed <- read.csv(reviews[i], skip = 2, header = FALSE, stringsAsFactors = FALSE, col.names = c("detection", "image_name", "frame_number", "bound_left", "bound_top", "bound_right", "bound_bottom", "score", "length", "detection_type", "type_score", 
                                                                                                      "att1", "att2", "att3", "att4", "att5", "att6", "att7", "att8"))
   
   reviewed <- data.frame(lapply(reviewed, function(x) {gsub("\\(trk-atr\\) *", "", x)})) %>%
