@@ -28,7 +28,7 @@ con <- RPostgreSQL::dbConnect(PostgreSQL(),
                               host = Sys.getenv("pep_ip"), 
                               #port = Sys.getenv("pep_port"), 
                               user = Sys.getenv("pep_admin"), 
-                              rstudioapi::askForPassword(paste("Enter your DB password for user account: ", Sys.getenv("pep_admin"), sep = "")))
+                              password = Sys.getenv("admin_pw"))
 
 # Delete data from tables (if needed)
 RPostgreSQL::dbSendQuery(con, paste("DELETE FROM species_misclass.tbl_detections_reviewed WHERE review_description = \'", review_description, "\'", sep = ""))
@@ -49,7 +49,7 @@ random <- random %>%
          review_description = review_description) %>%
   select(id, project_schema, image_name, project_detection_id, 
          species, review_file, reviewer, review_type, review_description,
-         bound_left, bound_bottom, bound_right, bound_top)
+         bound_left, bound_top, bound_right, bound_bottom)
 
 RPostgreSQL::dbWriteTable(con, c("species_misclass", "tbl_detections_reviewed"), random, append = TRUE, row.names = FALSE)
 RPostgreSQL::dbSendQuery(con, paste("UPDATE species_misclass.tbl_detections_reviewed m
@@ -107,18 +107,18 @@ for (i in 1:length(reviews)) {
     select(id, project_schema, image_name, project_detection_id, 
            species, species_confidence, age_class, age_class_confidence, 
            review_file, reviewer, review_type, review_description,
-           bound_left, bound_bottom, bound_right, bound_top)
+           bound_left, bound_top, bound_right, bound_bottom)
   
   RPostgreSQL::dbWriteTable(con, c("species_misclass", "tbl_detections_reviewed"), reviewed, append = TRUE, row.names = FALSE)
   
   RPostgreSQL::dbSendQuery(con, paste("UPDATE species_misclass.tbl_detections_reviewed r
                                       SET project_detection_id = o.project_detection_id
-                                      FROM (SELECT * FROM species_misclass.tbl_detections_reviewed WHERE review_type = 'original_detection' AND review_description = \'", review_description, "\') o
+                                      FROM (SELECT * FROM species_misclass.tbl_detections_reviewed WHERE review_type = \'original_detection\' AND review_description = \'", review_description, "\') o
                                       WHERE r.image_name = o.image_name
                                       AND r.bound_left = o.bound_left
                                       AND r.bound_top = o.bound_top
                                       AND r.review_description = \'", review_description, "\'
-                                      AND r.review_type = 'random_selection'
+                                      AND r.review_type = \'random_selection\'
                                       AND r.project_detection_id = \'\'", sep = ""))
   
 
