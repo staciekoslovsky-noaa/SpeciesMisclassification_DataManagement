@@ -20,7 +20,7 @@ con <- RPostgreSQL::dbConnect(PostgreSQL(),
                               dbname = Sys.getenv("pep_db"), 
                               host = Sys.getenv("pep_ip"), 
                               user = Sys.getenv("pep_admin"), 
-                              rstudioapi::askForPassword(paste("Enter your DB password for user account: ", Sys.getenv("pep_admin"), sep = "")))
+                              password = Sys.getenv("admin_pw"))
 
 # Get data from the DB
 data <- RPostgreSQL::dbGetQuery(con, "SELECT * FROM species_misclass.tbl_jobss_quartile1 UNION SELECT * FROM species_misclass.tbl_jobss_quartile3")
