@@ -57,7 +57,8 @@ data <- data %>%
                                         ifelse(age_class_confidence == "likely", "p2", 
                                                ifelse(age_class_confidence == "guess", "p3", "p?"))), age_class_conf)) %>%
   mutate(age_class_conf = ifelse(is.na(age_class), "unk", age_class_conf)) %>%
-  select(project_detection_id, hotspot_number, image_name, image_number, quartile, obs_id, skill_level, side, alt_ft, sp_id_conf, age_class_conf)
+  mutate(review_step = ifelse(review_file == "original_detection_file", "o", "m")) %>%
+  select(project_detection_id, hotspot_number, image_name, image_number, quartile, obs_id, skill_level, side, alt_ft, sp_id_conf, age_class_conf, review_step)
 
 # Prepare code key for exported data ----------------------------------------------------
 codes <- rbind((data %>%
@@ -86,7 +87,7 @@ codes <- rbind(codes, c("obs_id", "3", "SMW"))
 codes <- rbind(codes, c("side", "1", "Center"))
 codes <- rbind(codes, c("side", "2", "Left"))
 codes <- rbind(codes, c("side", "3", "Right"))
-
+T
 codes <- rbind(codes, c("sp_id_conf", "rd1", "Ringed, Positive"))
 codes <- rbind(codes, c("sp_id_conf", "rd2", "Ringed, Likely"))
 codes <- rbind(codes, c("sp_id_conf", "rd3", "Ringed, Guess"))
@@ -107,12 +108,15 @@ codes <- rbind(codes, c("age_class_conf", "p3", "Pup, Guess"))
 
 codes <- rbind(codes, c("age_class_conf", "unk", "Unknown Seal"))
 
+codes <- rbind(codes, c("review_step", "o", "Original Processing"))
+codes <- rbind(codes, c("review_step", "m", "Species Misclassification"))
+
 # Export data
 export <- data %>%
-  select(hotspot_number, image_number, quartile, obs_id, skill_level, side, alt_ft, sp_id_conf, age_class_conf)
+  select(hotspot_number, image_number, quartile, obs_id, skill_level, side, alt_ft, sp_id_conf, age_class_conf, review_step)
 
-write.csv(export, "C://skh//JoBSS_CompiledSpeciesID_20220422.csv", row.names = FALSE)
-write.csv(codes, "C://skh//JoBSS_CompiledSpeciesID_CodeKey_20220422.csv", row.names = FALSE)
+write.csv(export, "C://skh//JoBSS_CompiledSpeciesID_20220804.csv", row.names = FALSE)
+write.csv(codes, "C://skh//JoBSS_CompiledSpeciesID_CodeKey_20220804.csv", row.names = FALSE)
 
 # Disconnect and clean up
 RPostgreSQL::dbDisconnect(con)
