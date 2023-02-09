@@ -13,15 +13,20 @@ install_pkg <- function(x)
 }
 
 # Install libraries ----------------------------------------------
-### No libraries required! :)
+install_pkg("tidyverse")
 
 # Run code -------------------------------------------------------
 # Read data from CSV --------------------------------------------------------------------
-start <- data.frame(read.csv("//nmfs/akc-nmml/NMML_CHESS_Imagery/Subsample_speciesID/Jun2017/ChESS_speciesIDcheck_jun2017__RandomSelection.csv", stringsAsFactors = FALSE))
-gmb <- data.frame(read.csv("//nmfs/akc-nmml/NMML_CHESS_Imagery/Subsample_speciesID/Jun2017/Processed_gmb_ChESS_speciesIDcheck_jun2017_GMB.CSV", stringsAsFactors = FALSE))
-clc <- data.frame(read.csv("//nmfs/akc-nmml/NMML_CHESS_Imagery/Subsample_speciesID/Jun2017/Processed_clc_ChESS_speciesIDcheck_jun2017_CLC.CSV", stringsAsFactors = FALSE))
-spd <- data.frame(read.csv("//nmfs/akc-nmml/NMML_CHESS_Imagery/Subsample_speciesID/Jun2017/Processed_spd_ChESS_speciesIDcheck_jun2017_SPD.CSV", stringsAsFactors = FALSE))
-elr <- data.frame(read.csv("//nmfs/akc-nmml/NMML_CHESS_Imagery/Subsample_speciesID/Jun2017/Processed_elr_ChESS_speciesIDcheck_jun2017_ELR.CSV", stringsAsFactors = FALSE))
+start <- data.frame(read.csv("//nmfs/akc-nmml/NMML_CHESS_Imagery/Subsample_speciesID/Jun2017/ChESS_speciesIDcheck_jun2017__RandomSelection.csv", stringsAsFactors = FALSE)) %>%
+  mutate(review_step = "o")
+gmb <- data.frame(read.csv("//nmfs/akc-nmml/NMML_CHESS_Imagery/Subsample_speciesID/Jun2017/Processed_gmb_ChESS_speciesIDcheck_jun2017_GMB.CSV", stringsAsFactors = FALSE)) %>%
+  mutate(review_step = "m")
+clc <- data.frame(read.csv("//nmfs/akc-nmml/NMML_CHESS_Imagery/Subsample_speciesID/Jun2017/Processed_clc_ChESS_speciesIDcheck_jun2017_CLC.CSV", stringsAsFactors = FALSE)) %>%
+  mutate(review_step = "m")
+spd <- data.frame(read.csv("//nmfs/akc-nmml/NMML_CHESS_Imagery/Subsample_speciesID/Jun2017/Processed_spd_ChESS_speciesIDcheck_jun2017_SPD.CSV", stringsAsFactors = FALSE)) %>%
+  mutate(review_step = "m")
+elr <- data.frame(read.csv("//nmfs/akc-nmml/NMML_CHESS_Imagery/Subsample_speciesID/Jun2017/Processed_elr_ChESS_speciesIDcheck_jun2017_ELR.CSV", stringsAsFactors = FALSE)) %>%
+  mutate(review_step = "m")
 
 # Create identifiers for fields ---------------------------------------------------------
 hotspot <- unique(data.frame(hotspot_id = start$hotspot_id, stringsAsFactors = FALSE))
@@ -31,14 +36,14 @@ image <- unique(data.frame(thermal_image_name = start$thermal_image_name, string
 image$image_number <- 1:nrow(image)
 
 # Process individual datasets -----------------------------------------------------------
-start <- start[, c("hotspot_id", "thermal_image_name", "gga_alt", "HOTSPOT_TYPE", "SPECIES_ID", "SPECIES_CONFIDENCE", "AGE_CLASS", "AGE_CLASS_CONFIDENCE", "NUMBER_OF_SEALS", "ALT_SPECIES_ID", "ALT_AGE_CLASS", "reviewer")]
-gmb <- gmb[, c("hotspot_id", "thermal_image_name", "gga_alt", "HOTSPOT_TYPE", "SPECIES_ID", "SPECIES_CONFIDENCE", "AGE_CLASS", "AGE_CLASS_CONFIDENCE", "NUMBER_OF_SEALS", "ALT_SPECIES_ID", "ALT_AGE_CLASS")]
+start <- start[, c("hotspot_id", "thermal_image_name", "gga_alt", "HOTSPOT_TYPE", "SPECIES_ID", "SPECIES_CONFIDENCE", "AGE_CLASS", "AGE_CLASS_CONFIDENCE", "NUMBER_OF_SEALS", "ALT_SPECIES_ID", "ALT_AGE_CLASS", "review_step", "reviewer")]
+gmb <- gmb[, c("hotspot_id", "thermal_image_name", "gga_alt", "HOTSPOT_TYPE", "SPECIES_ID", "SPECIES_CONFIDENCE", "AGE_CLASS", "AGE_CLASS_CONFIDENCE", "NUMBER_OF_SEALS", "ALT_SPECIES_ID", "ALT_AGE_CLASS", "review_step")]
 gmb$reviewer <- "GMB"
-clc <- clc[, c("hotspot_id", "thermal_image_name", "gga_alt", "HOTSPOT_TYPE", "SPECIES_ID", "SPECIES_CONFIDENCE", "AGE_CLASS", "AGE_CLASS_CONFIDENCE", "NUMBER_OF_SEALS", "ALT_SPECIES_ID", "ALT_AGE_CLASS")]
+clc <- clc[, c("hotspot_id", "thermal_image_name", "gga_alt", "HOTSPOT_TYPE", "SPECIES_ID", "SPECIES_CONFIDENCE", "AGE_CLASS", "AGE_CLASS_CONFIDENCE", "NUMBER_OF_SEALS", "ALT_SPECIES_ID", "ALT_AGE_CLASS", "review_step")]
 clc$reviewer <- "CLC"
-spd <- spd[, c("hotspot_id", "thermal_image_name", "gga_alt", "HOTSPOT_TYPE", "SPECIES_ID", "SPECIES_CONFIDENCE", "AGE_CLASS", "AGE_CLASS_CONFIDENCE", "NUMBER_OF_SEALS", "ALT_SPECIES_ID", "ALT_AGE_CLASS")]
+spd <- spd[, c("hotspot_id", "thermal_image_name", "gga_alt", "HOTSPOT_TYPE", "SPECIES_ID", "SPECIES_CONFIDENCE", "AGE_CLASS", "AGE_CLASS_CONFIDENCE", "NUMBER_OF_SEALS", "ALT_SPECIES_ID", "ALT_AGE_CLASS", "review_step")]
 spd$reviewer <- "SPD"
-elr <- elr[, c("hotspot_id", "thermal_image_name", "gga_alt", "HOTSPOT_TYPE", "SPECIES_ID", "SPECIES_CONFIDENCE", "AGE_CLASS", "AGE_CLASS_CONFIDENCE", "NUMBER_OF_SEALS", "ALT_SPECIES_ID", "ALT_AGE_CLASS")]
+elr <- elr[, c("hotspot_id", "thermal_image_name", "gga_alt", "HOTSPOT_TYPE", "SPECIES_ID", "SPECIES_CONFIDENCE", "AGE_CLASS", "AGE_CLASS_CONFIDENCE", "NUMBER_OF_SEALS", "ALT_SPECIES_ID", "ALT_AGE_CLASS", "review_step")]
 elr$reviewer <- "ELR"
 
 # Merge individual datasets -------------------------------------------------------------
@@ -96,6 +101,8 @@ data$age_class_conf <- ifelse(data$AGE_CLASS == "Mom-Pup Pair",
 data$side <- ifelse(grepl("_C_", data$thermal_image_name), 1,
                     ifelse(grepl("_S_", data$thermal_image_name), 2, 3))
 
+data$date <- sapply(strsplit(data$thermal_image_name, "_"), function(x) x[4])
+
 # Prepare code key for exported data ----------------------------------------------------
 hotspot$type <- "hotspot_number"
 colnames(hotspot) <- c("description", "id", "type")
@@ -148,7 +155,8 @@ codes <- rbind(codes, c("age_class_conf", "m3", "Mom-Pup Pair, Guess"))
 codes <- rbind(codes, c("age_class_conf", "x", "Anomaly/Not Discernible/Evidence of Seal"))
 
 # Prepare data for export ---------------------------------------------------------------
-export <- data[, c(16:17, 13:15, 21, 18:20)]
+export <- data[, c(17:18, 23, 15:16, 22, 19, 20:21, 12)] %>%
+  filter(obs_id == 1 | obs_id == 2) #, 16:17, 13:15, 21, 18:20, 12)]
 
 #write.csv(data, "C:/Stacie.Hardy/Projects/AS_CHESS/Data/CHESS_SpeciesID_QAQC_20170418_SKH.csv")
 write.csv(export, "//nmfs/akc-nmml/NMML_CHESS_Imagery/Subsample_speciesID/Jun2017/CHESS_CompiledSpeciesID.csv", row.names = FALSE)
