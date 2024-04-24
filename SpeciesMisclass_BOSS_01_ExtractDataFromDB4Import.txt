@@ -1,0 +1,41 @@
+SELECT 'surv_boss' AS project_schema,
+	m.slr_image AS image_name, 
+	s.hotspot_id AS project_detection_id,
+	CASE WHEN s.species_id = 'bd' THEN 'bearded_seal' 
+		 WHEN s.species_id = 'rd' THEN 'ringed_seal' 
+		 WHEN s.species_id = 'rn' THEN 'ribbon_seal' 
+		 WHEN s.species_id = 'sd' THEN 'spotted_seal'
+		 WHEN s.species_id = 'unk' THEN 'unknown_seal'
+		 END AS species,
+	CASE WHEN s.species_conf = 'pos' THEN 'positive' 
+		 ELSE s.species_conf
+		 END AS species_confidence,
+	s.gross_age AS age_class,
+	CASE WHEN s.gross_age_conf = 'pos' THEN 'positive' 
+		 ELSE s.gross_age_conf
+		 END AS age_class_confidence,
+	'database' AS review_file,
+	CASE WHEN s.init_id_by = 'ERIN.RICHMOND' THEN 'ELR' 
+		 WHEN s.init_id_by = 'GAVIN.BRADY' THEN 'GMB' 
+		 WHEN s.init_id_by = 'SHAWN.DAHLE' THEN 'SPD' 
+		 WHEN s.init_id_by = 'KYM.YANO' THEN 'KMY' 
+	     END AS reviewer,
+	'species_misclass' AS review_type, 
+	'boss_review' AS review_description,
+	bound_left,
+	bound_top,
+	bound_right,
+	bound_bottom,
+	CASE WHEN s.species_alt = 'bd' THEN 'bearded_seal' 
+		 WHEN s.species_alt = 'rd' THEN 'ringed_seal' 
+		 WHEN s.species_alt = 'rn' THEN 'ribbon_seal' 
+		 WHEN s.species_alt = 'sd' THEN 'spotted_seal'
+		 WHEN s.species_alt = 'unk' THEN 'unknown_seal'
+		 ELSE s.species_alt END AS alt_species,
+	s.gross_age_alt AS alt_age_class,
+	1 AS num_seal,
+	'animal' AS hotspot_type
+FROM surv_boss.tbl_species_id s
+LEFT JOIN surv_boss.tbl_hotspot_match m USING (hotspot_id)
+LEFT JOIN surv_boss.tbl_detections_processed_rgb USING (hotspot_id)
+	ORDER BY s.hotspot_id
