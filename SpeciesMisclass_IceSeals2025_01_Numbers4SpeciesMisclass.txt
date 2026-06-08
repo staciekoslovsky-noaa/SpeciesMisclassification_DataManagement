@@ -1,0 +1,16 @@
+SELECT r.detection_type, COUNT(r.detection_type)
+FROM surv_ice_seals_2025.tbl_detections_processed_rgb r
+INNER JOIN surv_ice_seals_2025.tbl_detections_processed_ir i USING (processed_detection_id)
+WHERE r.detection_type LIKE '%seal'
+AND i.detection_type LIKE 'animal%'
+GROUP BY r.detection_type
+ORDER BY r.detection_type;
+
+SELECT i.detection_type, r.detection_type, COUNT(r.detection_type)
+FROM surv_ice_seals_2025.tbl_detections_processed_rgb r
+INNER JOIN surv_ice_seals_2025.tbl_detections_processed_ir i USING (processed_detection_id)
+WHERE r.detection_type LIKE '%seal'
+AND i.detection_type LIKE 'animal%'
+GROUP BY i.detection_type, r.detection_type
+ORDER BY i.detection_type, r.detection_type;
+
